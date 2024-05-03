@@ -34,3 +34,26 @@ actions:
           <version>1.7.1</version>
           </extension>
         </extensions>
+  - inject-maven-build-plugin:
+      text: |
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <executions>
+            <execution>
+              <goals>
+                <goal>build-info</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <image>
+              <buildpacks>
+                <buildpack>paketobuildpacks/java-native-image</buildpack>
+              </buildpacks>
+              <builder>paketobuildpacks/builder-jammy-buildpackless-tiny</builder>
+              <createdDate>now</createdDate>
+              <name>dashaun/${project.name}:v${project.version}-${os.detected.arch}</name>
+            </image>
+          </configuration>
+        </plugin>
