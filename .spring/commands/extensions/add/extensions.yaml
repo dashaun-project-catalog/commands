@@ -2,21 +2,27 @@ actions:
   - generate:
       to: ./.mvn/jgitver.config.xml
       text: |
-        <configuration xmlns="http://jgitver.github.io/maven/configuration/1.1.0"
-                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                       xsi:schemaLocation="http://jgitver.github.io/maven/configuration/1.1.0 https://jgitver.github.io/maven/configuration/jgitver-configuration-v1_1_0.xsd">
-            <strategy>CONFIGURABLE</strategy>
-            <policy>MAX</policy>
-            <autoIncrementPatch>true</autoIncrementPatch>
-            <useDirty>false</useDirty>
-            <useGitCommitId>false</useGitCommitId>
-            <useSnapshot>false</useSnapshot>
-            <gitCommitIdLength>8</gitCommitIdLength>
-            <nonQualifierBranches>main</nonQualifierBranches>
-            <useDefaultBranchingPolicy>true</useDefaultBranchingPolicy>
-            <exclusions>    <!-- Optional list of directory path -->
-                <exclusion>.m2</exclusion>    <!-- relative path from project root directory -->
-            </exclusions>
+        <configuration xmlns="https://github.com/qoomon/maven-git-versioning-extension"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="https://github.com/qoomon/maven-git-versioning-extension https://qoomon.github.io/maven-git-versioning-extension/configuration-9.4.0.xsd">
+
+          <refs considerTagsOnBranches="true">
+          <ref type="tag">
+          <pattern><![CDATA[v(?<version>.*)]]></pattern>
+          <version>${ref.version}</version>
+          </ref>
+          <ref type="branch">
+          <pattern>(main|release.*)</pattern>
+          <version>${describe.tag.version.major}.${describe.tag.version.minor}.${describe.tag.version.patch.next}-SNAPSHOT</version>
+          </ref>
+          <ref type="branch">
+          <pattern><![CDATA[feature/(?<feature>.+)]]></pattern>
+          <version>${describe.tag.version}-${ref.feature}-SNAPSHOT</version>
+          </ref>
+          </refs>
+          <rev>
+          <version>${commit}</version>
+          </rev>
         </configuration>
   - generate:
       to: ./.mvn/extensions.xml
@@ -24,13 +30,13 @@ actions:
         <extensions xmlns="http://maven.apache.org/EXTENSIONS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://maven.apache.org/EXTENSIONS/1.0.0 http://maven.apache.org/xsd/core-extensions-1.0.0.xsd">
           <extension>
-          <groupId>fr.brouillard.oss</groupId>
-          <artifactId>jgitver-maven-plugin</artifactId>
-          <version>1.9.0</version>
+            <groupId>me.qoomon</groupId>
+            <artifactId>maven-git-versioning-extension</artifactId>
+            <version>9.10.0</version>
           </extension>
           <extension>
-          <groupId>kr.motd.maven</groupId>
-          <artifactId>os-maven-plugin</artifactId>
-          <version>1.7.1</version>
+            <groupId>kr.motd.maven</groupId>
+            <artifactId>os-maven-plugin</artifactId>
+            <version>1.7.1</version>
           </extension>
         </extensions>
